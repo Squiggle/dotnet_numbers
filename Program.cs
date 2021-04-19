@@ -28,5 +28,35 @@ public class Program
   private static IEnumerable<int> GetDuplicates(List<int> numbers)
   {
     return new List<int>();
+
+    // Solution 1:
+    // readable solution with bad performance?
+    /*
+    return numbers
+      .GroupBy(n => n)
+      .Where(group => group.Count() > 1)
+      .Select(group => group.First());
+      */
+
+    // Solution 2:
+    // fun solution, slightly more performant? but more complex?
+    /*
+    numbers.Sort(); // warning: this mutates the original list!
+    var alreadyCounted = new List<int>();
+    for (var i = 0; i < numbers.Count; i++)
+    {
+      // crazy logic
+      if (!alreadyCounted.Contains(numbers[i])
+        && (i + 1) < numbers.Count
+        && numbers[i + 1] == numbers[i])
+      {
+        // using another array
+        alreadyCounted.Add(numbers[i]);
+        // but at least they understand enumerables
+        yield return numbers[i];
+        // and the output is in a different order than the other one
+      }
+    }
+    */
   }
 }
