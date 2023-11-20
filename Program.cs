@@ -17,7 +17,8 @@ public class Program
   {
     var numbers = new List<int> { 7, 2, 7, 7, 9, 5, 2 };
 
-    var duplicates = GetDuplicates(numbers);
+    var duplicates = GetDuplicatesWithLinq(numbers);
+    //var duplicates = GetDuplicatesWithLoops(numbers);
 
     foreach (var dupe in duplicates)
     {
@@ -25,38 +26,34 @@ public class Program
     }
   }
 
-  private static IEnumerable<int> GetDuplicates(List<int> numbers)
-  {
-    return new List<int>();
 
-    // Solution 1:
-    // readable solution with bad performance?
-    /*
-    return numbers
+  /// <summary>
+  /// With Linq
+  /// </summary>
+  private static IEnumerable<int> GetDuplicatesWithLinq(List<int> numbers) => numbers
       .GroupBy(n => n)
       .Where(group => group.Count() > 1)
-      .Select(group => group.First());
-      */
+      .Select(group => group.Key);
 
-    // Solution 2:
-    // fun solution, slightly more performant? but more complex?
-    /*
-    numbers.Sort(); // warning: this mutates the original list!
+  /// <summary>
+  /// With loops
+  /// </summary>
+  private static IEnumerable<int> GetDuplicatesWithLoops(List<int> numbers)
+  {
     var alreadyCounted = new List<int>();
-    for (var i = 0; i < numbers.Count; i++)
+    if (numbers.Count > 1)
     {
-      // crazy logic
-      if (!alreadyCounted.Contains(numbers[i])
-        && (i + 1) < numbers.Count
-        && numbers[i + 1] == numbers[i])
+      for (var i = 1; i < numbers.Count; i++)
       {
-        // using another array
-        alreadyCounted.Add(numbers[i]);
-        // but at least they understand enumerables
-        yield return numbers[i];
-        // and the output is in a different order than the other one
+        for (var j = 0; j < i; j++)
+        {
+          if (numbers[j] == numbers[i] && !alreadyCounted.Contains(numbers[i]))
+          {
+            alreadyCounted.Add(numbers[i]);
+            yield return numbers[i];
+          }
+        }
       }
     }
-    */
   }
 }
